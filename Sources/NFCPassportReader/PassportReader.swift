@@ -163,7 +163,10 @@ extension PassportReader : NFCTagReaderSessionDelegate {
         if let readerError = error as? NFCReaderError, readerError.code == NFCReaderError.readerSessionInvalidationErrorUserCanceled
             && self.shouldNotReportNextReaderSessionInvalidationErrorUserCanceled {
 
+            Logger.passportReader.debug( "tagReaderSession:didInvalidateWithError - shouldNotReportNextReaderSessionInvalidationErrorUserCanceled" )
             self.shouldNotReportNextReaderSessionInvalidationErrorUserCanceled = false
+            nfcContinuation?.resume(throwing: NFCPassportReaderError.UserCanceled)
+            nfcContinuation = nil
         } else {
             var userError = NFCPassportReaderError.UnexpectedError
             if let readerError = error as? NFCReaderError {
@@ -234,10 +237,11 @@ extension PassportReader : NFCTagReaderSessionDelegate {
 
 
             } catch let error as NFCPassportReaderError {
+                Logger.passportReader.debug( "tagReaderSession NFCPassportReaderError :failed to connect to tag - \(error.localizedDescription)" )
                 let errorMessage = NFCViewDisplayMessage.error(error)
                 self.invalidateSession(errorMessage: errorMessage, error: error)
             } catch let error {
-                Logger.passportReader.debug( "tagReaderSession:failed to connect to tag - \(error.localizedDescription)" )
+                Logger.passportReader.debug( "tagReaderSession Error:failed to connect to tag - \(error.localizedDescription)" )
                 let errorMessage = NFCViewDisplayMessage.error(NFCPassportReaderError.ConnectionError)
                 self.invalidateSession(errorMessage: errorMessage, error: NFCPassportReaderError.Unknown(error))
             }
@@ -443,6 +447,7 @@ extension PassportReader {
     func invalidateSession(errorMessage: NFCViewDisplayMessage, error: NFCPassportReaderError) {
         // Mark the next 'invalid session' error as not reportable (we're about to cause it by invalidating the
         // session). The real error is reported back with the call to the completed handler
+        Logger.passportReader.debug( "tagReaderSession invalidateSession: \(errorMessage.description) - \(error.localizedDescription)" )
         self.shouldNotReportNextReaderSessionInvalidationErrorUserCanceled = true
         self.readerSession?.invalidate(errorMessage: self.nfcViewDisplayMessageHandler?(errorMessage) ?? errorMessage.description)
         nfcContinuation?.resume(throwing: error)
