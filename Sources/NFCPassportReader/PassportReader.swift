@@ -138,8 +138,6 @@ public class PassportReader : NSObject {
             }
         }
     }
-
-
 }
 
 @available(iOS 15, *)
@@ -158,7 +156,7 @@ extension PassportReader : NFCTagReaderSessionDelegate {
         Logger.passportReader.debug( "tagReaderSession:didInvalidateWithError - \(error.localizedDescription)" )
         self.readerSession?.invalidate()
         self.readerSession = nil
-        sessionDidBecomeActive = false
+        self.sessionDidBecomeActive = false
 
         if let readerError = error as? NFCReaderError, readerError.code == NFCReaderError.readerSessionInvalidationErrorUserCanceled
             && self.shouldNotReportNextReaderSessionInvalidationErrorUserCanceled {
@@ -292,6 +290,7 @@ extension PassportReader {
         self.updateReaderSessionMessage(alertMessage: NFCViewDisplayMessage.successfulRead)
         self.shouldNotReportNextReaderSessionInvalidationErrorUserCanceled = true
         self.readerSession?.invalidate()
+        self.readerSession = nil
 
         // If we have a masterlist url set then use that and verify the passport now
         self.passport.verifyPassport(masterListURL: self.masterListURL, useCMSVerification: self.passiveAuthenticationUsesOpenSSL)
