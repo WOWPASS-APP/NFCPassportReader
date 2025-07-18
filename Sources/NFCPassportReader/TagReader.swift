@@ -177,6 +177,12 @@ public class TagReader {
         // Header looks like:  <tag><length of data><nextTag> e.g.60145F01 -
         // the total length is the 2nd value plus the two header 2 bytes
         // We've read 4 bytes so we now need to read the remaining bytes from offset 4
+
+        guard resp.data.count >= 4 else {
+            Logger.tagReader.error("TagReader - Response data too short: \(resp.data.count) bytes")
+            throw NFCPassportReaderError.UnexpectedError
+        }
+        
         let (len, o) = try! asn1Length([UInt8](resp.data[1..<4]))
         var remaining = Int(len)
         var amountRead = o + 1
