@@ -116,11 +116,15 @@ public class PassportReader : NSObject {
             // We are reading specific datagroups
             self.readAllDatagroups = false
         }
-        
-        guard NFCNDEFReaderSession.readingAvailable else {
+
+        guard nfcContinuation == nil else {
+            throw NFCPassportReaderError.NFCBusy
+        }
+
+        guard NFCTagReaderSession.readingAvailable else {
             throw NFCPassportReaderError.NFCNotSupported
         }
-        
+
         if NFCTagReaderSession.readingAvailable {
             readerSession = NFCTagReaderSession(pollingOption: [.iso14443], delegate: self, queue: nil)
             

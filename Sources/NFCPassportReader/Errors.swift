@@ -15,6 +15,7 @@ public enum NFCPassportReaderError: Error {
     case InvalidResponse(dataGroupId: DataGroupId, expectedTag: Int, actualTag: Int)
     case UnexpectedError
     case NFCNotSupported
+    case NFCBusy
     case NoConnectedTag
     case D087Malformed
     case InvalidResponseChecksum
@@ -50,6 +51,7 @@ public enum NFCPassportReaderError: Error {
                 return "InvalidResponse in \(dataGroupId.getName()). Expected: \(expected.hexString) Actual: \(actual.hexString)"
             case .UnexpectedError: return "UnexpectedError"
             case .NFCNotSupported: return "NFCNotSupported"
+            case .NFCBusy: return "NFCBusy"
             case .NoConnectedTag: return "NoConnectedTag"
             case .D087Malformed: return "D087Malformed"
             case .InvalidResponseChecksum: return "InvalidResponseChecksum"
