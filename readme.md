@@ -1,3 +1,35 @@
+## 이 저장소에 대해
+
+[AndyQ/NFCPassportReader](https://github.com/AndyQ/NFCPassportReader)를 fork 한 저장소입니다.
+WOWPASS iOS 앱의 여권 NFC 판독 기능에 사용합니다.
+
+## 이 조직에 유지되어야 하는 이유
+
+WOWPASS iOS 앱이 SPM 의존성으로 **이 저장소 주소를 직접 참조**합니다.
+
+- `Tuist/Dependencies.swift`
+- `Tuist/Dependencies/Lockfiles/Package.resolved`
+- `WOWPASS.xcworkspace/xcshareddata/swiftpm/Package.resolved`
+
+브랜치가 아니라 **특정 커밋(`f3187585114542e743e18d52c1ca68fe37a6f027`)에 고정**되어 있어,
+저장소가 삭제되거나 주소가 바뀌면 의존성 해석이 실패하고 **로컬·CI 양쪽 모두 빌드가 즉시 깨집니다.**
+
+upstream을 그대로 쓰지 않는 것은 WOWPASS 전용 수정이 적용되어 있기 때문입니다.
+
+## 비공개로 전환할 수 없는 이유
+
+fork 저장소는 원본이 public인 경우 private으로 전환할 수 없습니다.
+GitHub의 제약이라 설정으로 우회할 수 없고, fork 관계를 해제(detach)해야만 가능합니다.
+해제는 GitHub Support 요청이 필요합니다.
+
+## 정리 계획
+
+앱 저장소로 코드를 편입해 이 fork 자체를 제거하는 방향으로 정리할 예정입니다.
+그 전까지는 **삭제 · 이름 변경 · 소유자 이전을 하지 말아주세요.**
+변경이 필요하면 모바일팀에 먼저 공유 부탁드립니다.
+
+---
+
 # NFCPassportReader
 
 This package handles reading an NFC Enabled passport using iOS 13 CoreNFC APIS
